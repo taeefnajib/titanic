@@ -3,4 +3,4 @@ numpy==1.24.1
 scikit-learn
 joblib
 dataclasses-json
-sidetrek==0.0.92
+sidetrek==0.0.106

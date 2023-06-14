@@ -12,11 +12,10 @@ from sidetrek.dataset import load_dataset, build_dataset
 from dataclasses_json import dataclass_json
 from dataclasses import dataclass
 from typing import Tuple
-
+ 
 @dataclass_json
 @dataclass
 class Hyperparameters(object):
-    source: str = "data/train.csv"
     max_iter: int = 100
     random_state: int = 34
     n_nearest_features: int = 2
@@ -25,8 +24,7 @@ class Hyperparameters(object):
 hp = Hyperparameters()
 
 # Create dataframe
-def get_ds(hp:Hyperparameters)-> pd.DataFrame:
-    ds = build_dataset(io="upload", source=hp.source)
+def get_ds(ds: SidetrekDataset)-> pd.DataFrame:
     data = load_dataset(ds=ds, data_type="csv")
     data_dict = {}
     cols = list(data)[0]
@@ -133,7 +131,7 @@ def split_ds(df: pd.DataFrame, hp: Hyperparameters) -> Tuple[pd.DataFrame, pd.Da
 
 
 # Train model
-def train_model(hp: Hyperparameters, X_train: pd.DataFrame, y_train: pd.Series)->RandomForestClassifier:
+def train_model(hp: Hyperparameters, X_train: pd.DataFrame, y_train: pd.Series)-> RandomForestClassifier:
     # Initialize a RandomForestClassifier
     rf = RandomForestClassifier(random_state=34)
     params = {'n_estimators': [350],
@@ -146,15 +144,15 @@ def train_model(hp: Hyperparameters, X_train: pd.DataFrame, y_train: pd.Series)-
     return clf.fit(X_train, y_train.ravel())
 
 
-# Main workflow
-def main(hp: Hyperparameters):
-    df = get_ds(hp=hp)
-    df = preprocess(train = df, hp = hp)
-    X_train, X_test, y_train, y_test = split_ds(df=df, hp=hp)
-    model = train_model(hp=hp, X_train=X_train, y_train=y_train)
-    return model
+# # Main workflow
+# def main(hp: Hyperparameters):
+#     df = get_ds(hp=hp)
+#     df = preprocess(train = df, hp = hp)
+#     X_train, X_test, y_train, y_test = split_ds(df=df, hp=hp)
+#     model = train_model(hp=hp, X_train=X_train, y_train=y_train)
+#     return model
 
 
-if __name__=="__main__":
-    main(hp=hp)
+# if __name__=="__main__":
+#     main(hp=hp)
 
